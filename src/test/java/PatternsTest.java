@@ -15,6 +15,8 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class PatternsTest {
 
+    private static Faker faker;
+
     private void DataGenerator() {
     }
 
@@ -44,10 +46,7 @@ public class PatternsTest {
         }
 
         public static UserInfo generateUser(String locale) {
-            user
-            // TODO: добавить логику для создания пользователя user с использованием методов generateCity(locale),
-            // generateName(locale), generatePhone(locale)
-            return user;
+            return new UserInfo(generateCity(locale), generateName(locale), generatePhone(locale));
         }
     }
 
@@ -58,8 +57,6 @@ public class PatternsTest {
         String phone;
     }
 
-
-    private static Faker faker;
 
     @BeforeEach
     public void setUpAll() {
@@ -72,14 +69,30 @@ public class PatternsTest {
 
 
         open("http://localhost:9999");
-        $("input[placeholder='Город']").setValue("Владивосток");
-        $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(generateDate(3));
-        $("input[name='name']").setValue("Александр Сергеевич");
-        $("input[name='phone']").setValue("+79271620864");
+        $("input[placeholder='Город']").setValue(generateCity("ru"));
+      //  $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").setValue(generateDate(7));
+        $("input[name='name']").setValue(generateName("ru"));
+        $("input[name='phone']").setValue(generatePhone("ru"));
         $x("//span[@class='checkbox__box']").click();
         $x("//span[@class='button__text']").click();
         String text = $x("//div[@class='notification__content']").should(visible, Duration.ofSeconds(15)).getText();
+        $(".notification__content")
+
+                .shouldHave(Condition.text("Встреча успешно забронирована на " + generateDate(3)), Duration.ofSeconds(15))
+
+                .shouldBe(Condition.visible);
+
+
+        open("http://localhost:9999");
+        $("input[placeholder='Город']").setValue(generateCity("ru"));
+        //  $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+        $("[data-test-id='date'] input").setValue(generateDate(7));
+        $("input[name='name']").setValue(generateName("ru"));
+        $("input[name='phone']").setValue(generatePhone("ru"));
+        $x("//span[@class='checkbox__box']").click();
+        $x("//span[@class='button__text']").click();
+        String text2 = $x("//div[@class='notification__content']").should(visible, Duration.ofSeconds(15)).getText();
         $(".notification__content")
 
                 .shouldHave(Condition.text("Встреча успешно забронирована на " + generateDate(3)), Duration.ofSeconds(15))
