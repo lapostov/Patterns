@@ -57,45 +57,37 @@ public class PatternsTest {
         String phone;
     }
 
-
-    @BeforeEach
-    public void setUpAll() {
-
-        faker = new Faker(new Locale("ru"));
-    }
-
     @Test
     public void test() {
 
 
-        open("http://localhost:9999");
-        $("input[placeholder='Город']").setValue(generateCity("ru"));
-      //  $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(generateDate(7));
-        $("input[name='name']").setValue(generateName("ru"));
-        $("input[name='phone']").setValue(generatePhone("ru"));
-        $x("//span[@class='checkbox__box']").click();
-        $x("//span[@class='button__text']").click();
-        String text = $x("//div[@class='notification__content']").should(visible, Duration.ofSeconds(15)).getText();
-        $(".notification__content")
+  //      open("http://localhost:9999");
+  //      $("input[placeholder='Город']").setValue("Владивосток");
+  //      $("[data-test-id='date'] input").setValue(generateDate(7));
+  //      $("input[name='name']").setValue("Александр Четверяков");
+  //      $("input[name='phone']").setValue("+79271620850");
+  //      $x("//span[@class='checkbox__box']").click();
+  //      $x("//span[@class='button__text']").click();
+  //      String text = $x("//div[@class='notification__content']").should(visible, Duration.ofSeconds(15)).getText();
+  //      $(".notification__content")
+//
+  //              .shouldHave(Condition.text("Встреча успешно забронирована на " + generateDate(7)), Duration.ofSeconds(15))
 
-                .shouldHave(Condition.text("Встреча успешно забронирована на " + generateDate(3)), Duration.ofSeconds(15))
-
-                .shouldBe(Condition.visible);
-
+  //              .shouldBe(Condition.visible);
 
         open("http://localhost:9999");
-        $("input[placeholder='Город']").setValue(generateCity("ru"));
-        //  $("[data-test-id='date'] input").sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
-        $("[data-test-id='date'] input").setValue(generateDate(7));
-        $("input[name='name']").setValue(generateName("ru"));
-        $("input[name='phone']").setValue(generatePhone("ru"));
+        $("input[placeholder='Город']").setValue("Владивосток");
+        String date = $("[data-test-id='date'] input").setValue(generateDate(4)).getText();
+        $("input[name='name']").setValue("Александр Четверяков");
+        $("input[name='phone']").setValue("+79271620850");
         $x("//span[@class='checkbox__box']").click();
         $x("//span[@class='button__text']").click();
-        String text2 = $x("//div[@class='notification__content']").should(visible, Duration.ofSeconds(15)).getText();
-        $(".notification__content")
 
-                .shouldHave(Condition.text("Встреча успешно забронирована на " + generateDate(3)), Duration.ofSeconds(15))
+        $x("//div[@data-test-id='replan-notification']//button").click();
+        String text = $x("//div[@data-test-id='success-notification']//div[@class='notification__content']").should(visible, Duration.ofSeconds(3)).getText().trim();
+        $x("//div[@data-test-id='success-notification']//div[@class='notification__content']")
+
+                .shouldHave(Condition.text("Встреча успешно забронирована на " + date), Duration.ofSeconds(3))
 
                 .shouldBe(Condition.visible);
 
